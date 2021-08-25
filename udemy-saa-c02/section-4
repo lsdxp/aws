@@ -1,0 +1,6 @@
+user/group/permissions: least privilege principle.
+
+inline policy
+IAM policy structure: version,id,statement{....}
+
+IAM CLI/MFA/Security

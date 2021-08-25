@@ -1,0 +1,7 @@
+elastic ip
+placement groups: cluster,spread,partition
+elastic network interface: easily attach/detach network for failover
+https://aws.amazon.com/blogs/aws/new-elastic-network-interfaces-in-the-virtual-private-cloud/
+
+hibernate: save RAM state to EBS
+advanced: nitro(higer EBS IOPS), vCPU, capacity reservation
