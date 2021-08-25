@@ -1,3 +1,7 @@
 https://instances.vantage.sh/
 
 not use configure in ec2, instead use roles
+
+elastic instance connect
+
+spot instance and spot fleets
