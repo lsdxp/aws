@@ -1,2 +1,3 @@
-ebs volume: attach/unattach, locked in AZ
-
+EBS volume: attach/unattach, locked in AZ
+EBS snapshot: copy store from AZ to AZ
+AMI: launch instance,customize,stop 
