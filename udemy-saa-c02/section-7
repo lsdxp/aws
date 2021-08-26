@@ -1,3 +1,17 @@
 EBS volume: attach/unattach, locked in AZ
 EBS snapshot: copy store from AZ to AZ
 AMI: launch instance,customize,stop 
+EBS volume: size/throughput/IOPS (gp2/gp3,io 1 io 2,st 1, sc 1)
+EBS multi-attach: io 1/ io 2
+EBS Encryption: KMS
+EBS RAID 0(performance)/ RAID 1(fault tolerance) -mirror
+EFS
+
+
+You have provisioned an 8TB gp2 EBS volume and you are running out of IOPS. What is NOT a way to increase performance?
+Lecture 0 EBS Volume Types Deep Dive
+
+You would like to leverage EBS volumes in parallel to linearly increase performance, while accepting greater failure risks. Which RAID mode helps you in achieving that?
+Lecture 67 EBS RAID configurations
+
+You are running a high-performance database that requires an IOPS of 210,000 for its underlying filesyst
