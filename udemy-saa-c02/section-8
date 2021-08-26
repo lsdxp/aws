@@ -1,0 +1,13 @@
+Application Load Balancers handle all these protocols except
+Lecture 73 Elastic Load Balancing (ELB) Overview
+
+The application load balancer can route to different target groups based on all these except...
+Lecture 73 Elastic Load Balancing (ELB) Overview
+
+You would like to expose a fixed static IP to your end-users for compliance purposes, so they can write firewall rules that will be stable and approved by regulators. Which Load Balancer should you use?
+Lecture 73 Elastic Load Balancing (ELB) Overview
+
+
+elastic load balancer: clb, alb, nlb
+
+auto scaling group
