@@ -68,3 +68,23 @@ service
 Nodeport, clusterIP, load balancer
 kubectl expose deployment simple-webapp-deployment --name=webapp-service --target-port=8080 --type=NodePort --port=8080 --dry-run=client -o yaml
 
+---------
+scheduler
+spec->nodeName 
+-------
+label
+kubectl get pods --selector app=App1
+kubectl get pods --selector bu=finance,env=prod,tier=frontend
+
+----
+taint effect: NoSchedule|PreferNoSchedule|NoExecute
+kubectl taint nodes node1 app=blue:NoSchedule
+untaint: kubectl taint nodes controlplane node-role.kubernetes.io/master:NoSchedule-
+
+----
+nodeSelector
+kubectl label nodes node01 size=Large
+
+node affinity
+
+requiredDuringSchedulingIgnoredExecution
