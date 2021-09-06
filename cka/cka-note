@@ -62,3 +62,9 @@ kubectl get pods --namespace=dev
 
 db-service.dev.svc.cluster.local (pod namespace service domain)
 
+------
+service
+
+Nodeport, clusterIP, load balancer
+kubectl expose deployment simple-webapp-deployment --name=webapp-service --target-port=8080 --type=NodePort --port=8080 --dry-run=client -o yaml
+
