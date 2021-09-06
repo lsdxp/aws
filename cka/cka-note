@@ -19,6 +19,17 @@ pod yaml:
 
 apiversion
 kind
-metadata
+metadata -> dict
 
-spec
+spec -> list
+
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+
+commands: 
+kubectl run nginx --image=nginx
+kubectl describe pod pod-name
+kubectl get pods -o wide
+kubectl run redis --image=redis123 --dry-run=client -o yaml > pod.yml
+kubectl apply -f pod.yml
+kubectl edit pod redis
+
