@@ -53,3 +53,12 @@ kubectl get all
 https://kubernetes.io/docs/reference/kubectl/conventions/
 
 
+-----
+namespace
+
+kubectl config set-context $(kubectl config current-context)  --namespace=dev
+kubectl get pods --all-namespaces
+kubectl get pods --namespace=dev
+
+db-service.dev.svc.cluster.local (pod namespace service domain)
+
