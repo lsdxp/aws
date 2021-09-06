@@ -33,3 +33,23 @@ kubectl run redis --image=redis123 --dry-run=client -o yaml > pod.yml
 kubectl apply -f pod.yml
 kubectl edit pod redis
 
+
+--------------
+replication controller vs replica set
+
+replica set -> selector and matchlabels
+
+kubectl replace -f replicaset-definition.yml
+kubectl scale --replicas=6 -f replicaset-definition.yml
+kubectl scale --replicas=6 replicaset myapp-replicaset
+kubectl get replicaset
+kubectl delete replicaset myapp-replicaset
+
+---------
+kind: Deployment
+kubectl get deployments
+kubectl get all
+
+https://kubernetes.io/docs/reference/kubectl/conventions/
+
+
