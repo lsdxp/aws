@@ -88,3 +88,4 @@ kubectl label nodes node01 size=Large
 node affinity
 
 requiredDuringSchedulingIgnoredExecution
+kubectl get deployment.apps blue -o yaml > pod.yml
