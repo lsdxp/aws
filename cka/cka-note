@@ -160,3 +160,7 @@ volumes:
 - name: app-secret-volume
   secret:
     secretName: app-secret
+
+envFrom:
+- secretRef:
+            name: db-secret
