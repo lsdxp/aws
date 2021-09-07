@@ -103,3 +103,8 @@ static pod
 -------
 multi scheduler
 scheduleName in pod config
+-----
+https://github.com/kodekloudhub/kubernetes-metrics-server.git
+kubectl top node
+------
+kubectl logs -f pod-name (container name if multiple)
