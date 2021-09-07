@@ -1,1 +1,91 @@
-test
+structure:
+
+master:
+kube-apiserver 
+etcd
+kube controller
+kube-scheduler
+
+worker:
+kube-let
+kube-proxy
+docker/container runtime
+
+kubectl exec etcd-master -n kube-system -- sh -c "ETCDCTL_API=3 etcdctl get / --prefix --keys-only --limit=10 --cacert /etc/kubernetes/pki/etcd/ca.crt --cert /etc/kubernetes/pki/etcd/server.crt  --key /etc/kubernetes/pki/etcd/server.key" 
+
+kubeadm doesn't install kubelet
+
+pod yaml:
+
+apiversion
+kind
+metadata -> dict
+
+spec -> list
+
+https://kubernetes.io/docs/reference/kubectl/cheatsheet/
+
+commands: 
+kubectl run nginx --image=nginx
+kubectl describe pod pod-name
+kubectl get pods -o wide
+kubectl run redis --image=redis123 --dry-run=client -o yaml > pod.yml
+kubectl apply -f pod.yml
+kubectl edit pod redis
+
+
+--------------
+replication controller vs replica set
+
+replica set -> selector and matchlabels
+
+kubectl replace -f replicaset-definition.yml
+kubectl scale --replicas=6 -f replicaset-definition.yml
+kubectl scale --replicas=6 replicaset myapp-replicaset
+kubectl get replicaset
+kubectl delete replicaset myapp-replicaset
+
+---------
+kind: Deployment
+kubectl get deployments
+kubectl get all
+
+https://kubernetes.io/docs/reference/kubectl/conventions/
+
+
+-----
+namespace
+
+kubectl config set-context $(kubectl config current-context)  --namespace=dev
+kubectl get pods --all-namespaces
+kubectl get pods --namespace=dev
+
+db-service.dev.svc.cluster.local (pod namespace service domain)
+
+------
+service
+
+Nodeport, clusterIP, load balancer
+kubectl expose deployment simple-webapp-deployment --name=webapp-service --target-port=8080 --type=NodePort --port=8080 --dry-run=client -o yaml
+
+---------
+scheduler
+spec->nodeName 
+-------
+label
+kubectl get pods --selector app=App1
+kubectl get pods --selector bu=finance,env=prod,tier=frontend
+
+----
+taint effect: NoSchedule|PreferNoSchedule|NoExecute
+kubectl taint nodes node1 app=blue:NoSchedule
+untaint: kubectl taint nodes controlplane node-role.kubernetes.io/master:NoSchedule-
+
+----
+nodeSelector
+kubectl label nodes node01 size=Large
+
+node affinity
+
+requiredDuringSchedulingIgnoredExecution
+kubectl get deployment.apps blue -o yaml > pod.yml
