@@ -89,3 +89,6 @@ node affinity
 
 requiredDuringSchedulingIgnoredExecution
 kubectl get deployment.apps blue -o yaml > pod.yml
+
+--------
+dameon set, one pod each node
