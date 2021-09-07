@@ -92,3 +92,14 @@ kubectl get deployment.apps blue -o yaml > pod.yml
 
 --------
 dameon set, one pod each node
+
+-----
+static pod
+
+/etc/kubenetes/manifes/
+--pod-manifest-path
+--config -> staticPodPath
+
+-------
+multi scheduler
+scheduleName in pod config
