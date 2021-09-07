@@ -108,3 +108,8 @@ https://github.com/kodekloudhub/kubernetes-metrics-server.git
 kubectl top node
 ------
 kubectl logs -f pod-name (container name if multiple)
+
+------
+kubectl rollout status deployment/myapp-deployment
+kubectl rollout history deployment/myapp-deployment
+kubectl rollout undo deployment/myapp-deployment
