@@ -89,3 +89,87 @@ node affinity
 
 requiredDuringSchedulingIgnoredExecution
 kubectl get deployment.apps blue -o yaml > pod.yml
+
+--------
+dameon set, one pod each node
+
+-----
+static pod
+
+/etc/kubenetes/manifes/
+--pod-manifest-path
+--config -> staticPodPath
+
+-------
+multi scheduler
+scheduleName in pod config
+-----
+https://github.com/kodekloudhub/kubernetes-metrics-server.git
+kubectl top node
+------
+kubectl logs -f pod-name (container name if multiple)
+
+------
+kubectl rollout status deployment/myapp-deployment
+kubectl rollout history deployment/myapp-deployment
+kubectl rollout undo deployment/myapp-deployment
+
+------
+docker run --entrypoint sleep2.0 ubuntu-sleeper 10
+
+under container
+ENTRYPOINT-> command:
+                - sleep2.0
+                - "1200"
+CMD-> args:
+        - "10"
+
+env:
+   - name:
+    value:
+    
+env:
+   - name: APP_COLOR
+    valueFrom:   
+        configMapKeyRef:
+          name: app-config
+          key: APP_COLOR
+envFrom:
+    - configMapRef:
+      name: app-config
+      
+volumes:
+- name: app-config-volume
+  configMap:
+    name: app-config
+kubectl create configmap app-config --from-literal=APP_COLOR=blue
+kubectl create configmap app-config --from-file=app_config.properties
+kubectl create -f config-map.yaml
+kubectl get configmaps
+
+kubectl create secret generic app-secret --from-literal=DB_HOST=mysql
+kubectl create secret generic app-secret --from-file=app_secret.properties
+kubectl create -f app-secret.yaml
+
+echo -n 'mysql' | base64
+kubectl get secrets
+
+echo -n 'bX1zcWw-' | base64 --decode
+
+volumes:
+- name: app-secret-volume
+  secret:
+    secretName: app-secret
+
+envFrom:
+- secretRef:
+            name: db-secret
+            
+---------
+There are 3 common patterns, when it comes to designing multi-container PODs. 
+The first and what we just saw with the logging service example is known as a side car pattern. 
+The others are the adapter and the ambassador pattern.
+
+------------
+initContainers
+
