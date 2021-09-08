@@ -230,3 +230,4 @@ ETCDCTL_API=3 etcdctl snapshot save snapshot-pre-boot.db --endpoints=https://[12
 ETCDCTL_API=3 etcdctl  --data-dir /var/lib/etcd-from-backup \
 snapshot restore /opt/snapshot-pre-boot.db
 -------
+openssl x509 -in file-path.crt -text -noout -in /etc/kubernetes/pki/apiserver.crt 
