@@ -231,3 +231,13 @@ ETCDCTL_API=3 etcdctl  --data-dir /var/lib/etcd-from-backup \
 snapshot restore /opt/snapshot-pre-boot.db
 -------
 openssl x509 -in file-path.crt -text -noout -in /etc/kubernetes/pki/apiserver.crt 
+
+------
+
+kubectl get csr jane -o yaml
+kubectl certificate approve jane
+
+----
+kubectl config view
+kubectl config use-context produser@production
+kubectl config current-context
