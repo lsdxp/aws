@@ -363,3 +363,14 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 After save into a file, run the command kubectl create -f <file-name>.yaml to create a resources from definition file.
 https://kodekloud.com/topic/practice-test-cluster-roles-2/?utm_source=udemy&utm_medium=labs&utm_campaign=kubernetes
+
+_________
+kubectl create serviceaccount dashboard-sa
+
+registry->
+
+
+kubectl create secret docker-registry private-reg-cred --docker-server=myprivateregistry.com:5000 --docker-username=dock_user --docker-password=dock_password --docker-email=dock_user@myprivateregistry.com
+
+securityContext:
+  runAsUser: 1010
