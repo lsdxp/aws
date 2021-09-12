@@ -450,3 +450,9 @@ root@controlplane:~# kubectl exec webapp -- cat /log/app.log
 
 static provisioning / dynamic provisioning
 storage class
+-----
+ip link/ip a
+ip route
+ifconfig
+netstat -nplt / netstat -natulp
+netstat -anp
