@@ -230,3 +230,223 @@ ETCDCTL_API=3 etcdctl snapshot save snapshot-pre-boot.db --endpoints=https://[12
 ETCDCTL_API=3 etcdctl  --data-dir /var/lib/etcd-from-backup \
 snapshot restore /opt/snapshot-pre-boot.db
 -------
+openssl x509 -in file-path.crt -text -noout -in /etc/kubernetes/pki/apiserver.crt 
+
+------
+
+kubectl get csr jane -o yaml
+kubectl certificate approve jane
+
+----
+kubectl config view
+kubectl config use-context produser@production
+kubectl config current-context
+
+--------
+kubectl proxy
+curl http://localhost:8001 -k
+______
+node abac rbac webhook
+kubectl auth can-i delete deployments --as dev-user --namespace dev
+
+
+To create a Role:- kubectl create role developer --namespace=default --verb=list,create --resource=pods
+To create a RoleBinding:- kubectl create rolebinding dev-user-binding --namespace=default --role=developer --user=dev-user
+OR
+
+
+
+Solution manifest file to create a role and rolebinding in the default namespace:
+
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: default
+  name: developer
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["list", "create"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dev-user-binding
+subjects:
+- kind: User
+  name: dev-user
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: developer
+  apiGroup: rbac.authorization.k8s.io
+_____
+---
+kind: Role
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  namespace: blue
+  name: deploy-role
+rules:
+- apiGroups: ["apps", "extensions"]
+  resources: ["deployments"]
+  verbs: ["create"]
+
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: dev-user-deploy-binding
+  namespace: blue
+subjects:
+- kind: User
+  name: dev-user
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: Role
+  name: deploy-role
+  apiGroup: rbac.authorization.k8s.io
+_______
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: node-admin
+rules:
+- apiGroups: [""]
+  resources: ["nodes"]
+  verbs: ["get", "watch", "list", "create", "delete"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: michelle-binding
+subjects:
+- kind: User
+  name: michelle
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: node-admin
+  apiGroup: rbac.authorization.k8s.io
+After save into a file, run the command kubectl create -f <file-name>.yaml to create a resources from definition file.
+-______
+Solution manifest file to create a clusterrole and clusterrolebinding for michelle user:
+
+---
+kind: ClusterRole
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: storage-admin
+rules:
+- apiGroups: [""]
+  resources: ["persistentvolumes"]
+  verbs: ["get", "watch", "list", "create", "delete"]
+- apiGroups: ["storage.k8s.io"]
+  resources: ["storageclasses"]
+  verbs: ["get", "watch", "list", "create", "delete"]
+
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: michelle-storage-admin
+subjects:
+- kind: User
+  name: michelle
+  apiGroup: rbac.authorization.k8s.io
+roleRef:
+  kind: ClusterRole
+  name: storage-admin
+  apiGroup: rbac.authorization.k8s.io
+After save into a file, run the command kubectl create -f <file-name>.yaml to create a resources from definition file.
+https://kodekloud.com/topic/practice-test-cluster-roles-2/?utm_source=udemy&utm_medium=labs&utm_campaign=kubernetes
+
+_________
+kubectl create serviceaccount dashboard-sa
+
+registry->
+
+
+kubectl create secret docker-registry private-reg-cred --docker-server=myprivateregistry.com:5000 --docker-username=dock_user --docker-password=dock_password --docker-email=dock_user@myprivateregistry.com
+
+securityContext:
+  runAsUser: 1010
+——————
+
+kubectl get networkpolicy
+
+podSelector
+namesapceSelector
+ipBlock
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: internal-policy
+  namespace: default
+spec:
+  podSelector:
+    matchLabels:
+      name: internal
+  policyTypes:
+  - Egress
+  - Ingress
+  ingress:
+    - {}
+  egress:
+  - to:
+    - podSelector:
+        matchLabels:
+          name: mysql
+    ports:
+    - protocol: TCP
+      port: 3306
+
+  - to:
+    - podSelector:
+        matchLabels:
+          name: payroll
+    ports:
+    - protocol: TCP
+      port: 8080
+
+  - ports:
+    - port: 53
+      protocol: UDP
+    - port: 53
+      protocol: TCP
+---------
+storage
+
+docker volume create data_volume
+#docker run -v data_volume:/var/lib/mysql mysql
+#docker run -v /data/mysql:/var/lib/mysql mysql
+docker run --mount type=bind,source=/data/mysql,target=/var/lib/mysql mysql
+docker run -it --name mysql --volume-driver rexray/ebs --mount src=ebs-vol,target=/var/lib/mysql mysql
+
+kubectl get persistentvolume
+kubectl get persistentvolumeclaim
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: mypod
+spec:
+  containers:
+    - name: myfrontend
+      image: nginx
+      volumeMounts:
+      - mountPath: "/var/www/html"
+        name: mypd
+  volumes:
+    - name: mypd
+      persistentVolumeClaim:
+        claimName: myclaim
+-------
+root@controlplane:~# kubectl exec webapp -- cat /log/app.log
+
+static provisioning / dynamic provisioning
+storage class
