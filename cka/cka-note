@@ -481,5 +481,5 @@ daemon set
 
 -----------
 
-
+kubectl get ingress
 
