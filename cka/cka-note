@@ -32,6 +32,11 @@ kubectl get pods -o wide
 kubectl run redis --image=redis123 --dry-run=client -o yaml > pod.yml
 kubectl apply -f pod.yml
 kubectl edit pod redis
+____________
+
+web-service.app.svc.cluster.local
+
+corefile -> configmaps
 
 
 --------------
