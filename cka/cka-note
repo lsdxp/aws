@@ -32,6 +32,11 @@ kubectl get pods -o wide
 kubectl run redis --image=redis123 --dry-run=client -o yaml > pod.yml
 kubectl apply -f pod.yml
 kubectl edit pod redis
+____________
+
+web-service.app.svc.cluster.local
+
+corefile -> configmaps
 
 
 --------------
@@ -450,3 +455,31 @@ root@controlplane:~# kubectl exec webapp -- cat /log/app.log
 
 static provisioning / dynamic provisioning
 storage class
+-----
+ip link/ip a
+ip route
+ifconfig
+netstat -nplt / netstat -natulp
+netstat -anp
+
+______
+
+get node ip range: 
+ip a
+
+get pod ip range:
+kubectl -n kube-system logs weave-net-4x768 weave  
+
+get service ip range:
+
+    - --service-cluster-ip-range=10.96.0.0/12
+
+get kube-proxy setup:
+kubectl -n kube-system logs kube-proxy-ff6qd kube-proxy
+
+daemon set
+
+-----------
+
+kubectl get ingress
+
