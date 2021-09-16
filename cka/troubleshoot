@@ -5,6 +5,9 @@ describe deploy
 describe pod
 describe pod
 
+control plane fail
+
+network fail:
 
 
 worker node fail:
