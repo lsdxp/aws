@@ -1,0 +1,70 @@
+application failure:
+
+describe svc
+describe deploy
+describe pod
+describe pod
+
+control plane fail
+
+network fail:
+
+
+worker node fail:
+
+describe node 
+systemctl status kubelet
+journalctl -u kubelet -f
+
+cd /etc/kubernetes/pki
+cd /etc/systemd/system/kubelet.service.d/
+
+Step1: Check the status of the nodes:
+
+
+root@controlplane:~# kubectl get nodes
+NAME           STATUS     ROLES                  AGE     VERSION
+controlplane   Ready      control-plane,master   6m38s   v1.20.0
+node01         NotReady   <none>                 4m59s   v1.20.0
+root@controlplane:~# 
+Step 2: SSH to node01 and check the status of container runtime (docker, in this case) and the kubelet service.
+
+root@node01:~# systemctl status kubelet
+● kubelet.service - kubelet: The Kubernetes Node Agent
+   Loaded: loaded (/lib/systemd/system/kubelet.service; enabled; vendor preset: enabled)
+  Drop-In: /etc/systemd/system/kubelet.service.d
+           └─10-kubeadm.conf
+   Active: inactive (dead) since Sun 2021-07-25 07:46:58 UTC; 5min ago
+     Docs: https://kubernetes.io/docs/home/
+  Process: 1917 ExecStart=/usr/bin/kubelet $KUBELET_KUBECONFIG_ARGS $KUBELET_CONFIG_ARGS $KUBELET_KUBEADM_ARGS $KUBELET_EXTRA_ARGS (code=exited,
+ Main PID: 1917 (code=exited, status=0/SUCCESS)
+Since the kubelet is not running, attempt to start it by running:
+
+root@node01:~# systemctl start kubelet
+root@node01:~# systemctl status kubelet
+● kubelet.service - kubelet: The Kubernetes Node Agent
+   Loaded: loaded (/lib/systemd/system/kubelet.service; enabled; vendor preset: enabled)
+  Drop-In: /etc/systemd/system/kubelet.service.d
+           └─10-kubeadm.conf
+   Active: active (running) since Sun 2021-07-25 07:53:35 UTC; 2s ago
+     Docs: https://kubernetes.io/docs/home/
+
+
+Once again the kubelet service has stopped working. Checking the logs, we can see that this time, it is not able to reach the kube-apiserver.
+
+root@node01:~# journalctl -u kubelet 
+.
+.
+Jul 25 08:05:26 node01 kubelet[7966]: E0725 08:05:26.426155    7966 reflector.go:138] k8s.io/kubernetes/pkg/kubelet/config/apiserver.go:46: Failed to watch *v1.Pod: failed to list *v1.Pod: Get "https://controlplane:6553/api/v1/pods?fieldSelector=spec.nodeName%3Dnode01&limit=500&resourceVersion=0": dial tcp 10.1.126.9:6553: connect: connection refused
+.
+.
+As we can clearly see, kubelet is trying to connect to the API server on the controlplane node on port 6553. This is incorrect.
+To fix, correct the port on the kubeconfig file used by the kubelet.
+
+apiVersion: v1
+clusters:
+- cluster:
+    certificate-authority-data:
+    --REDACTED---
+    server: https://controlplane:6443
+Restart the kubelet after this change.
