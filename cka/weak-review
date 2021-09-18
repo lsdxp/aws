@@ -52,3 +52,10 @@ spec:
   resources:
     requests:
       storage: 10Mi
+
+
+rollingupdate:
+
+
+kubectl rollout status deploy nginx-deploy
+kubectl set image deployment/nginx-deploy nginx=nginx:1.17 --record
