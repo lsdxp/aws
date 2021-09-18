@@ -149,4 +149,7 @@ subjects:
 $ kubectl auth can-i update pods --as=john --namespace=development
 
 
+service and dns:
+kubectl run nginx-resolver --image=nginx
+kubectl expose pod nginx-resolver --name=nginx-resolver-service --port=80 --target-port=80 --type=ClusterIP
 
