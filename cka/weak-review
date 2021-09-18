@@ -1,2 +1,54 @@
 service: clusterIP/NodePort -> port value
 etcd
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 \
+  --cacert=<trusted-ca-file> --cert=<cert-file> --key=<key-file> \
+  snapshot save <backup-file-location>
+
+volume mount:
+
+spec:
+  containers:
+  - image: redis:alpine
+    name: redis-storage
+    volumeMounts:
+    - mountPath: /data/redis
+      name: temp-volume
+  volumes:
+  - name: temp-volume
+    emptyDir: {}
+    
+pvc mount:
+
+    volumeMounts:
+        - mountPath: "/data"
+          name: pv1-pvc
+  volumes:
+    - name: pv1-pvc
+      persistentVolumeClaim:
+        claimName: my-pvc
+
+security context:
+spec:
+  containers:
+  - image: busybox:1.28
+    name: super-user-pod
+    securityContext:
+            capabilities:
+                    add: ["SYS_TIME"]
+    resources: {}
+    
+    
+    
+pvc:
+
+
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: my-pvc
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
