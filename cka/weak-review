@@ -176,3 +176,52 @@ Address 1: 10.50.192.1 10-50-192-1.nginx-resolver-service.default.svc.cluster.lo
 pod "test-ns" deleted
 root@controlplane:~# 
 
+serviceaccount creation and binding:
+
+    2  kubectl create serviceaccount pvviewer 
+
+create cluster role
+root@controlplane:~# cat c.yaml 
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pvviewer-role
+rules:
+- apiGroups: ["rbac.authorization.k8s.io"]
+  resources: ["persistentvolumes"]
+  verbs: ["list"]
+   13  kubectl create clusterrolebinding pvviewer-role-binding --clusterrole=pvviewer-role --serviceaccount=default:pvviewer 
+   15  kubectl run pvviewer --image=redis --serviceaccount=pvviewer
+
+
+get ip:
+
+kubectl get nodes -o=jsonpath='{.items[*].status.addresses[?(.type == "InternalIP")].address}' > /root/CKA/node_ips
+
+multi container pod:
+
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: multi-pod
+spec:
+  containers:
+  - image: nginx
+    name: alpha
+    env:
+    - name: name
+      value: alpha
+  - image: busybox
+    name: beta
+    command: ["sleep", "4800"]
+    env:
+    - name: name
+      value: beta
+      
+securityContext:
+
+spec:
+  securityContext:
+    runAsUser: 1000
+    fsGroup: 2000
