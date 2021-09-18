@@ -1,0 +1,2 @@
+service: clusterIP/NodePort -> port value
+etcd
