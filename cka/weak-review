@@ -153,3 +153,26 @@ service and dns:
 kubectl run nginx-resolver --image=nginx
 kubectl expose pod nginx-resolver --name=nginx-resolver-service --port=80 --target-port=80 --type=ClusterIP
 
+kubectl run test-ns --image=busybox:1.28 --rm -it --restart=Never -- nslookup nginx-resolver-service
+
+
+
+root@controlplane:~# kubectl get pod nginx-resolver -o wide
+NAME             READY   STATUS    RESTARTS   AGE   IP            NODE     NOMINATED NODE   READINESS GATES
+nginx-resolver   1/1     Running   0          12m   10.50.192.1   node01   <none>           <none>
+root@controlplane:~# kubectl run test-ns --image=busybox:1.28 --rm -it --restart=Never -- nslookup 10-50-192-1   
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+nslookup: can't resolve '10-50-192-1'
+pod "test-ns" deleted
+pod default/test-ns terminated (Error)
+root@controlplane:~# kubectl run test-ns --image=busybox:1.28 --rm -it --restart=Never -- nslookup 10-50-192-1.default.pod
+Server:    10.96.0.10
+Address 1: 10.96.0.10 kube-dns.kube-system.svc.cluster.local
+
+Name:      10-50-192-1.default.pod
+Address 1: 10.50.192.1 10-50-192-1.nginx-resolver-service.default.svc.cluster.local
+pod "test-ns" deleted
+root@controlplane:~# 
+
