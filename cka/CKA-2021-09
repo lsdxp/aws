@@ -181,3 +181,26 @@ kubectl edit pvc pv-volume --record
 14.
 kubectl logs foobar | grep "asdgasdg" > sadfasd
 
+
+*15.
+  - name: sidecar
+    image: busybox
+    args: [/bin/sh, -c, 'tail -n+1 -f /var/log/11-factor-app.log']
+    volumeMounts:
+    - name: varlog
+      mountPath: /var/log
+  volumes:
+  - name: varlog
+    emptyDir: {}
+    
+16.
+kubectl top pod -l name=cpu-loader --sort-by=cpu -A
+
+*17.
+
+sudo -i 
+systemctl status kubelet
+systemctl enable kubelet
+systemctl restart kubelet
+systemctl status kubelet
+
