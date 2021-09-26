@@ -96,3 +96,88 @@ spec:
               
 
 8.
+kubectl scale deployment/guestbook --replicas=10
+
+9.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-kusc0041
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  nodeSelector:
+    disk: ssd
+    
+10.
+kubectl get nodes
+kubectl describe nodes | grep -i taint | grep -i noschedule
+
+*11.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-kusc0041
+spec:
+  containers:
+  - name: nginx
+    image: nginx
+  - name: redis
+    image: redis
+
+12.
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: app-config
+  labels:
+    type: local
+spec:
+  capacity:
+    storage: 2Gi
+  accessModes:
+    - ReadWriteMany
+  hostPath:
+    path: "/srv/app-config"
+    
+*13.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pv-volume
+spec:
+  storageClassName: csi-hostath-sc
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Mi
+ 
+ 
+apiVersion: v1
+kind: Pod
+metadata:
+  name: web-server
+spec:
+  volumes:
+    - name: pv-storage
+      persistentVolumeClaim:
+        claimName: pv-volume
+  containers:
+    - name: nginx
+      image: nginx
+      ports:
+        - containerPort: 80
+          name: "http-server"
+      volumeMounts:
+        - mountPath: "/usr/share/nginx/html"
+          name: pv-storage 
+          
+
+kubectl edit pvc pv-volume --record
+
+14.
+kubectl logs foobar | grep "asdgasdg" > sadfasd
+
