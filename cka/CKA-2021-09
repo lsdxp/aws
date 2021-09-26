@@ -1,0 +1,98 @@
+kubectl config use-context your-k8s-name
+
+1.
+kubectl create ns app-team1
+kubectl create clusterrole deployment-clusterrole --resource=deployment,statefulset,daemonset --verb=create -n app-team1
+kubectl create sa cicd-token -n app-team1
+kubectl create rolebinding cicd-rolebinding --clusterrole=deployment-clusterrole --serviceaccount=app-team1:cicd-token -n app-team1
+
+2.
+kubectl cordon ek8s-node-1
+kubectl drain ek8s-node-1 --ignore-daemonsets --delete-emptydir-data
+
+3.
+ssh mk8s-master-0
+kubectl cordon mk8s-master-0
+sudo -i
+kubectl drain mk8s-master-0 --ignore-daemonsets
+
+apt-mark unhold kubeadm kubectl kubelet && apt-get update && apt-get install -y kubeadm=1.21.x-00 kubelet=1.21.x-00 kubectl=1.21.x-00 && \
+apt-mark hold kubeadm kubectl kubelet
+sudo kubeadm upgrade plan
+sudo kubeadm upgrade apply v1.21.x --etcd-upgrade=false
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+kubectl uncordon mk8s-master-0
+
+
+*4.
+
+ETCDCTL_API=3 etcdctl --endpoints=https://127.0.0.1:2379 --cacert=<trusted-ca-file> --cert=<cert-file> --key=<key-file> snapshot save /var/lib/backup/etcd-snapshot.db
+
+ETCDCTL_API=3 etcdctl --data-dir /var/lib/etcd-from-backup snapshot restore /data/backup/etcd-snapshot-previous.db
+
+edit etcd.yml volume of etcd-data to use /data/backup/etcd-snapshot-previous.db
+
+volumes:
+  - hostPath:
+      path: /var/lib/etcd-from-backup
+      type: DirectoryOrCreate
+    name: etcd-data
+    
+    
+5.
+
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-port-from-namespace
+  namespace: fubar
+spec:
+  podSelector:
+    matchLabels: {}
+  policyTypes:
+  - Ingress
+  ingress:
+  - from:
+    - namespaceSelector:
+        matchLabels:
+          namespace: my-app
+      podSelector:
+        matchLabels: {}
+    ports:
+    - protocol: TCP
+      port: 80
+
+6.
+
+        ports:
+        - name: http
+          protocol: TCP
+          containerPort: 80
+
+kubectl expose deployment front-end --type=NodePort --name=front-end-svc --targetPort=80 --port=80
+
+
+7.
+
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ping
+  namespace: ing-internal
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /hello
+        pathType: Prefix
+        backend:
+          service:
+            name: hello
+            port:
+              number: 5678
+              
+
+8.
